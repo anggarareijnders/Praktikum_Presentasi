@@ -19,8 +19,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+<body class="font-sans" style="background-image: url('{{  asset('https://images.hdqwalls.com/download/real-madrid-cf-wn-2560x1440.jpg') }}'); background-size: 100% background-position: center;">
+    
         @include('layouts.navigation')
 
         <!-- Page Heading -->

@@ -13,11 +13,25 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class BookController extends Controller
 {
-    public function index()
-    {
-        $data['books'] = Book::with('bookshelf')->get();
-        return view('books.index', $data);
+    public function index(Request $request)
+{
+    $query = Book::with('bookshelf');
+    
+   
+    if ($request->has('search')) {
+        $search = $request->input('search');
+        $query->where('title', 'like', '%' . $search . '%')
+              ->orWhere('author', 'like', '%' . $search . '%')
+              ->orWhere('publisher', 'like', '%' . $search . '%');
     }
+
+    
+    $data['books'] = $query->paginate(5);
+
+    return view('books.index', $data);
+}
+
+
 
     public function create()
     {
@@ -139,4 +153,6 @@ class BookController extends Controller
         );
         return redirect()->route('book')->with($notification);
     }
+
+    
 }

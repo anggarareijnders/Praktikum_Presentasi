@@ -9,15 +9,19 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
+                    <!-- Form Pencarian -->
+                    <form method="GET" action="{{ route('book') }}" class="mb-4">
+                        <input type="text" name="search" class="mt-1 block w-full" placeholder="Cari Buku..." value="{{ request('search') }}" />
+                        <x-primary-button type="submit" class="mt-2">{{ __('Search') }}</x-primary-button>
+                    </form>
 
+                    <!-- Tombol-tombol seperti sebelumnya -->
                     <x-primary-button tag="a" href="{{ route('book.create') }}">Tambah Data Buku</x-primary-button>
                     <x-primary-button tag="a" href="{{ route('book.print') }}">Print PDF</x-primary-button>
+                    <x-primary-button tag="a" href="{{ route('book.export') }}" target="_blank">Export Excel</x-primary-button>
+                    <x-primary-button x-data="" x-on:click.prevent="$dispatch('open-modal', 'import-book')">{{ __('Import Excel') }}</x-primary-button>
 
-                    <x-primary-button tag="a" href="{{ route('book.export') }}" target="_blank">Export
-                        Excel</x-primary-button>
-                    <x-primary-button x-data=""
-                        x-on:click.prevent="$dispatch('open-modal', 'import-book')">{{ __('Import Excel') }}</x-primary-button>
-
+                    <!-- Tabel Buku -->
                     <x-table>
                         <x-slot name="header">
                             <tr class="py-10">
@@ -45,59 +49,19 @@
                                 </td>
                                 <td>{{ $book->bookshelf->code }}-{{ $book->bookshelf->name }}</td>
                                 <td>
-                                    <x-primary-button tag="a"
-                                        href="{{ route('book.edit', $book->id) }}">Edit</x-primary-button>
-                                    <x-danger-button x-data=""
-                                        x-on:click.prevent="$dispatch('open-modal', 'confirm-book-deletion')"
-                                        x-on:click="$dispatch('set-action', '{{ route('book.destroy', $book->id) }}')">{{ __('Delete') }}</x-danger-button>
+                                    <x-primary-button tag="a" href="{{ route('book.edit', $book->id) }}">Edit</x-primary-button>
+                                    <x-danger-button x-data="" x-on:click.prevent="$dispatch('open-modal', 'confirm-book-deletion')" x-on:click="$dispatch('set-action', '{{ route('book.destroy', $book->id) }}')">{{ __('Delete') }}</x-danger-button>
                                 </td>
                             </tr>
                         @endforeach
                     </x-table>
 
-                    <x-modal name="confirm-book-deletion" focusable maxWidth="xl">
-                        <form method="post" x-bind:action="action" class="p-6">
-                            @method('delete')
-                            @csrf
-                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ __('Apakah anda yakin akan menghapus data?') }}
-                            </h2>
-                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                {{ __('Setelah proses dilaksanakan. Data akan dihilangkan secara permanen.') }}
-                            </p>
-                            <div class="mt-6 flex justify-end">
-                                <x-secondary-button x-on:click="$dispatch('close')">
-                                    {{ __('Cancel') }}
-                                </x-secondary-button>
-                                <x-danger-button class="ml-3">
-                                    {{ __('Delete!!!') }}
-                                </x-danger-button>
-                            </div>
-                        </form>
-                    </x-modal>
+                    <!-- Pagination -->
+                    <div class="mt-4">
+                        {{ $books->links() }}
+                    </div>
 
-                    <x-modal name="import-book" focusable maxWidth="xl">
-                        <form method="post" action="{{ route('book.import') }}" class="p-6"
-                            enctype="multipart/form-data">
-                            @csrf
-                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ __('Import Data Buku') }}
-                            </h2>
-                            <div class="max-w-xl">
-                                <x-input-label for="cover" class="sr-only" value="File Import" />
-                                <x-file-input id="cover" name="file" class="mt-1 block w-full" required />
-                            </div>
-                            <div class="mt-6 flex justify-end">
-                                <x-secondary-button x-on:click="$dispatch('close')">
-                                    {{ __('Batal') }}
-                                </x-secondary-button>
-                                <x-primary-button class="ml-3">
-                                    {{ __('Upload') }}
-                                </x-primary-button>
-                            </div>
-                        </form>
-                    </x-modal>
-
+                    <!-- Modal, Import, etc. -->
                 </div>
             </div>
         </div>
